@@ -9,3 +9,6 @@
 
     <button type="submit">Register</button>
 </form>
+
+{% load socialaccount %}
+<a href="{% provider_login_url 'github' %}">Увійти через GitHub</a>

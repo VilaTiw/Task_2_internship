@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from myapp.forms import SignUpForm, UserProfileForm
+from myapp.tasks import send_welcome_email
 
 def signup(request):
     if request.method == 'POST':
@@ -13,6 +14,7 @@ def signup(request):
             profile.user = user
             profile.save()
 
+            send_welcome_email.delay(user.email, user.username)
             login(request, user)
             return redirect("profile_success")
     else:
