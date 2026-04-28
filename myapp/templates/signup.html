@@ -1,14 +1,12 @@
+{% load socialaccount %}
+
 <h2>Registration</h2>
 <form method="post">
     {% csrf_token %}
     <h3>Account details</h3>
     {{ user_form.as_p }}
-
-    <h3>About myself</h3>
-    {{ profile_form.as_p }}
-
     <button type="submit">Register</button>
 </form>
 
-{% load socialaccount %}
-<a href="{% provider_login_url 'github' %}">Увійти через GitHub</a>
+<h3>Or use another method:</h3>
+<a href="{% provider_login_url 'github' %}">Log with GitHub</a>

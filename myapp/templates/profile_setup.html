@@ -1,0 +1,8 @@
+<h2>Almost done!</h2>
+<p>Hello, {{ user.username }}! Please fill in your profile information so we can generate a cool description for you.</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save and continue</button>
+</form>
