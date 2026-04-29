@@ -1,0 +1,14 @@
+<h2>Profile of {{ friend.username }}</h2>
+
+<div class="profile-info">
+    <p><strong>Age:</strong> {{ friend.profile.age|default:"Not specified" }}</p>
+    <p><strong>Location:</strong> {{ friend.profile.location|default:"Planet Earth" }}</p>
+    <p><strong>Interests:</strong> {{ friend.profile.interests }}</p>
+    <p><strong>Favorite color:</strong> <span style="color: {{ friend.profile.fav_color }}">{{ friend.profile.fav_color }}</span></p>
+</div>
+
+<hr>
+<h3>AI Generated Description:</h3>
+<p><i>{{ friend.profile.description|default:"No description yet." }}</i></p>
+
+<a href="{% url 'home' %}">Back to users list</a>

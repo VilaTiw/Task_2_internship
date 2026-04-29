@@ -1,12 +1,23 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from myapp.forms import SignUpForm, UserProfileForm
+from myapp.models import User, UserFriends
 from myapp.tasks import send_welcome_email
 from myapp.ai_services import generate_user_description
 import time
+
+def home(request):
+    if request.user.is_authenticated:
+        friends_id = UserFriends.objects.filter(user=request.user).values_list("friend_id", flat=True)
+        potential_friends = User.objects.exclude(id=request.user.id).exclude(id__in=friends_id)
+        user_friends = User.objects.filter(id__in=friends_id)
+
+        return render(request, "home_authenticated.html", {"potential_friends": potential_friends, "user_friends": user_friends})
+    else:
+        return render(request, "home_guest.html")
 
 def signup(request):
     if request.method == 'POST':
@@ -38,6 +49,19 @@ def profile_setup(request):
         form = UserProfileForm(instance=profile)
 
     return render(request, "profile_setup.html", {"form": form})
+
+@login_required
+def add_friend(request, user_id):
+    user = request.user
+    friend = User.objects.get(id=user_id)
+    UserFriends.objects.get_or_create(user=user, friend=friend)
+    return redirect("home")
+
+@login_required
+def user_profile(request, friend_id):
+    friend = get_object_or_404(User, id=friend_id)
+    return render(request, "user_profile.html", {"friend": friend})
+
 
 @login_required
 def generate_description(request):
