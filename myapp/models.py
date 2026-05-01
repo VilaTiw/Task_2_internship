@@ -9,11 +9,11 @@ class User(AbstractUser):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    age = models.PositiveIntegerField()
-    location = models.CharField(max_length=255)
-    interests = models.TextField(max_length=255)
-    fav_color = models.CharField(max_length=255)
-    description = models.TextField()
+    age = models.PositiveIntegerField(null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    interests = models.TextField(max_length=255, null=True, blank=True)
+    fav_color = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"Profile of {self.user.username}"
