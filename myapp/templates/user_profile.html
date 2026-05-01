@@ -1,14 +1,54 @@
-<h2>Profile of {{ friend.username }}</h2>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<div class="profile-info">
-    <p><strong>Age:</strong> {{ friend.profile.age|default:"Not specified" }}</p>
-    <p><strong>Location:</strong> {{ friend.profile.location|default:"Planet Earth" }}</p>
-    <p><strong>Interests:</strong> {{ friend.profile.interests }}</p>
-    <p><strong>Favorite color:</strong> <span style="color: {{ friend.profile.fav_color }}">{{ friend.profile.fav_color }}</span></p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Кнопка повернення -->
+            <div class="mb-3">
+                <a href="{% url 'home' %}" class="text-decoration-none text-muted">
+                    ← Back to users list
+                </a>
+            </div>
+
+            <div class="card shadow">
+                <!-- Заголовок профілю -->
+                <div class="card-header bg-primary text-white p-4">
+                    <h2 class="mb-0">Profile of {{ friend.username }}</h2>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <p><strong>🎂 Age:</strong> {{ friend.profile.age|default:"Not specified" }}</p>
+                            <p><strong>📍 Location:</strong> {{ friend.profile.location|default:"Planet Earth" }}</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p><strong>🎨 Favorite color:</strong>
+                                <span class="badge" style="background-color: {{ friend.profile.fav_color|default:'#6c757d' }}; color: white;">
+                                    {{ friend.profile.fav_color|default:"None" }}
+                                </span>
+                            </p>
+                            <p><strong>🌟 Interests:</strong> {{ friend.profile.interests|default:"None" }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Секція опису -->
+                    <div class="bg-light p-4 rounded-3 border-start border-primary border-4">
+                        <h4 class="text-primary mb-3">
+                            <span class="me-2">🤖</span>AI Generated Description
+                        </h4>
+                        <p class="lead fst-italic mb-0">
+                            "{{ friend.profile.description|default:"No description available yet. This user needs to generate one!" }}"
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card-footer text-center py-3">
+                    <small class="text-muted">User ID: #{{ friend.id }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<hr>
-<h3>AI Generated Description:</h3>
-<p><i>{{ friend.profile.description|default:"No description yet." }}</i></p>
-
-<a href="{% url 'home' %}">Back to users list</a>

@@ -8,7 +8,7 @@ urlpatterns = [
     path("", home, name="home"),
     path("signup/", signup, name="signup"),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path("success/", lambda r: render(r, "success.html"), name="profile_success"),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path("profile-setup/", profile_setup, name="profile_setup"),
 
     path("password-reset/",

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.core.cache import cache
@@ -37,14 +38,15 @@ def profile_setup(request):
     profile = request.user.profile
 
     if all([profile.age, profile.location, profile.interests, profile.fav_color]):
-        return redirect("profile_success")
+        return redirect("home")
 
     if request.method == "POST":
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
             send_welcome_email.delay(profile.user.email, profile.user.username)
-            return redirect("profile_success")
+            messages.success(request, "Congratulations! Your profile has been successfully created.")
+            return redirect("home")
     else:
         form = UserProfileForm(instance=profile)
 
@@ -75,12 +77,14 @@ def generate_description(request):
         if wait_time > 0:
             wait_min = wait_time // 60
             wait_sec = wait_time % 60
-            return JsonResponse({"error": f"Too many requests! Try again in {wait_min} minutes and {wait_sec} seconds."}, status=429)
+            messages.error(request, f"Too many requests! Try again in {wait_min} minutes and {wait_sec} seconds.")
+            return redirect('home')
 
     profile = request.user.profile
 
     if not all([profile.age, profile.location, profile.interests, profile.fav_color]):
-        return JsonResponse({"error": "First, fill out all the profile fields!"}, status=400)
+        messages.warning(request, "First, fill out all the profile fields!")
+        return redirect('home')
 
     user_data = {
         "name": profile.user.username,
@@ -96,6 +100,8 @@ def generate_description(request):
 
         cache.set(cache_key, time.time(), 1200)
 
-        return JsonResponse({"description": ai_description}, status=200)
+        messages.success(request, "AI Description has been successfully generated!")
+        return redirect('home')
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        messages.error(request, f"Error: {str(e)}")
+        return redirect('home')
